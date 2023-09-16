@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Previsão do Tempo - Brasil</title>
+</head>
+<body>
+    <h1><marquee>AOP02 - BackEnd - Previsão do Tempo - Brasil</marquee></h1>
+    <div id="data-container"></div>
+
+    <script>
+        // Cria um objeto XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Define o tipo de requisição e a URL da API
+        xhr.open("GET", "http://apiadvisor.climatempo.com.br/api/v1/anl/synoptic/locale/BR?token=358464928092567d43c7fc153b44a6d4", true);
+
+        // Define o que fazer quando a resposta for recebida
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                // A resposta da API é uma string JSON, então vamos analisá-la em um objeto JavaScript
+                var posts = JSON.parse(xhr.responseText);
+
+                // Referência ao elemento no qual exibiremos os dados
+                var dataContainer = document.getElementById("data-container");
+
+                // Constrói o HTML com os dados obtidos
+                var html = "<ul>";
+                posts.forEach(function (post) {
+                    html += "<li><strong>País:</strong> " + post.country + "<br><strong>Data:</strong> " + post.date + "<br><strong>Previsão:</strong> " + post.text + "</li>";
+                });
+                html += "</ul>";
+
+                // Insere o HTML no elemento
+                dataContainer.innerHTML = html;
+            } else {
+                console.error("Erro na requisição: " + xhr.status + " - " + xhr.statusText);
+            }
+        };
+
+        // Define o que fazer em caso de erro na requisição
+        xhr.onerror = function () {
+            console.error("Erro na requisição");
+        };
+
+        // Envia a requisição
+        xhr.send();
+    </script>
+</body>
+</html>
